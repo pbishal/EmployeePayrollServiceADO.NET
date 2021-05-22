@@ -1,0 +1,10 @@
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\bin\Debug\EmployeePayrollService.exe.config
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\bin\Debug\EmployeePayrollService.exe
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\bin\Debug\EmployeePayrollService.pdb
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\bin\Debug\System.Data.SqlClient.dll
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\bin\Debug\System.Data.SqlClient.xml
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\obj\Debug\EmployeePayrollService.csprojAssemblyReference.cache
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\obj\Debug\EmployeePayrollService.csproj.CoreCompileInputs.cache
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\obj\Debug\EmployeePayrollService.csproj.CopyComplete
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\obj\Debug\EmployeePayrollService.exe
+C:\Users\Bishal Pradhan\source\repos\EmployeePayrollService\EmployeePayrollService\obj\Debug\EmployeePayrollService.pdb
