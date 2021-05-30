@@ -42,6 +42,8 @@ namespace EmployeePayrollService
             model.Incometax = 1000;
 
             repository.AddEmployee(model);
+
+            Console.WriteLine(repository.UpdateSalaryIntoDatabase("Bishal", 70000) ? "Update done successfully " : "Update Failed");
         }
     }
 }

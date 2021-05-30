@@ -15,22 +15,18 @@ namespace EmployeePayrollService
         /// Establishing the connection using the Sql
         SqlConnection connection = new SqlConnection(conectionString);
 
-        //SqlConnection connection1 = new SqlConnection(connectionString);
-        //ReInitiallizing the connection using the sql for update employee method.
-        //SqlConnection connection2 = new SqlConnection(connectionString);
-
-
-
         ///UC1 Creating a method for checking for the validity of the connection.
 
         public void EnsureDataBaseConnection()
         {
-            this.connection.Open();
+            /// Creates a new connection for every method to avoid "ConnectionString property not initialized" exception
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
             using (connection)
             {
                 Console.WriteLine("The Connection is created");
             }
-            this.connection.Close();
+            connection.Close();
         }
 
         /// UC2 Ability for Employee Payroll Service to retrieve the Employee Payroll from the Database
@@ -105,7 +101,7 @@ namespace EmployeePayrollService
                 using (this.connection)
                 {
                     //Creating a stored Procedure for adding employees into database
-                    SqlCommand command = new SqlCommand("dbo.Employee_Daata", this.connection);
+                    SqlCommand command = new SqlCommand("dbo.employee_payroll", this.connection);
                     //Command type is set as stored procedure
                     command.CommandType = CommandType.StoredProcedure;
                     //Adding values from employeemodel to stored procedure using disconnected architecture
@@ -137,7 +133,45 @@ namespace EmployeePayrollService
                 connection.Close();
             }
 
-        }
 
+
+        }
+        /// UC3 Updates the given empname with given salary into database.
+        /// </summary>
+        /// <param name="empName"></param>
+        /// <param name="basicPay"></param>
+        /// <returns></returns>
+        public bool UpdateSalaryIntoDatabase(string empName, double basicPay)
+        {
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    string query = @"update dbo.employee_payroll set basic_pay=@p1 where Name=@p2";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@p1", basicPay);
+                    command.Parameters.AddWithValue("@p2", empName);
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+        }
     }
 }
