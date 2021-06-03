@@ -173,5 +173,31 @@ namespace EmployeePayrollService
             }
 
         }
+        /// UC 4  Reads the updated salary from database.
+
+        public double UpdatedSalaryFromDatabase(string empName)
+        {
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    string query = @"select basic_pay from dbo.employee_payroll where EmpName=@p1";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@p1", empName);
+                    return (double)command.ExecuteScalar();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
