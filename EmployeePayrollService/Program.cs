@@ -46,8 +46,11 @@ namespace EmployeePayrollService
             //Console.WriteLine(repository.UpdateSalaryIntoDatabase("Bishal", 70000) ? "Update done successfully " : "Update Failed");
             //repository.GetEmployeesFromForDateRange("2018 - 05 - 03");
 
-            repository.FindGroupedByGenderData("M");
-            Console.ReadKey();
+            //repository.FindGroupedByGenderData("M");
+            //Console.ReadKey();
+
+            ///UC8 Retrieves the employee details from multiple tables after implementing E - R concept.
+            repository.RetrieveEmployeeDetailsFromMultipleTables();
         }
     }
 }

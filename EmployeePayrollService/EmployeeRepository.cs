@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Data.SqlClient;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace EmployeePayrollService
 {
@@ -374,6 +374,64 @@ namespace EmployeePayrollService
                         Console.WriteLine(exRollback.Message);
                     }
                 }
+            }
+        }
+
+        /// UC 8 : Retrieves the employee details from multiple tables after implementing E-R concept.
+        public void RetrieveEmployeeDetailsFromMultipleTables()
+
+        {
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
+            EmployeeModel employee = new EmployeeModel();
+            string query = @"select emp.EmpId, emp.EmpName, dept.basic_pay, emp.StartDate, emp.phoneNumber, emp.address, 
+                                    dept.department, emp.gender, pay.deductions, pay.taxable_pay, pay.income_tax, pay.net_pay
+                                    from employee_payroll emp, employee_department dept, payroll pay
+                                    where emp.EmpId = dept.EmpId and dept.basic_pay = pay.basic_pay;";
+            try
+            {
+                using (connection)
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            employee.Id = reader.GetInt32(0);
+                            employee.Name = reader.GetString(1);
+                            employee.Basic_Pay = reader.GetDouble(2);
+                            employee.startDate = reader.GetDateTime(3);
+                            employee.Gender = reader.GetChar(4);
+                            employee.phone_number = reader.GetInt64(5);
+                            employee.address = reader.GetString(6);
+                            employee.department = reader.GetString(7);
+                            employee.Taxable_pay = reader.GetDouble(8);
+                            employee.Deduction = reader.GetDouble(9);
+                            employee.NetPay = reader.GetDouble(10);
+                            employee.Incometax = reader.GetDouble(11);
+                            Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", employee.Id, employee.Name,
+                                employee.Basic_Pay, employee.startDate, employee.Gender, employee.phone_number, employee.address, employee.department,
+                                employee.Taxable_pay, employee.Deduction, employee.NetPay, employee.Incometax);
+                            Console.WriteLine("\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No data found");
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (connection.State.Equals("Open"))
+                    connection.Close();
             }
         }
     }
