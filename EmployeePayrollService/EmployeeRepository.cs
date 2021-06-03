@@ -199,5 +199,13 @@ namespace EmployeePayrollService
                 connection.Close();
             }
         }
+
+        /// UC5 Gets the employees details for a particular date range.
+
+        public void GetEmployeesFromForDateRange(string date)
+        {
+            string query = $@"select * from dbo.employee_payroll where StartDate between cast('{date}' as date) and cast(getdate() as date)";
+            GetAllEmployeeData(query);
+        }
     }
 }
