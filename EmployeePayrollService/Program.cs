@@ -43,8 +43,11 @@ namespace EmployeePayrollService
 
             repository.AddEmployee(model);
 
-            Console.WriteLine(repository.UpdateSalaryIntoDatabase("Bishal", 70000) ? "Update done successfully " : "Update Failed");
-            repository.GetEmployeesFromForDateRange("2018 - 05 - 03");
+            //Console.WriteLine(repository.UpdateSalaryIntoDatabase("Bishal", 70000) ? "Update done successfully " : "Update Failed");
+            //repository.GetEmployeesFromForDateRange("2018 - 05 - 03");
+
+            repository.FindGroupedByGenderData("M");
+            Console.ReadKey();
         }
     }
 }

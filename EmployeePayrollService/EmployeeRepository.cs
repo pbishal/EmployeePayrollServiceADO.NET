@@ -207,5 +207,51 @@ namespace EmployeePayrollService
             string query = $@"select * from dbo.employee_payroll where StartDate between cast('{date}' as date) and cast(getdate() as date)";
             GetAllEmployeeData(query);
         }
+        /// UC6 Getting the detail of salary ofthe employee joining grouped by gender and searched for a particular gender.
+
+        public void FindGroupedByGenderData(string gender)
+        {
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
+            try
+            {
+                using (connection)
+                {
+                    string query = @"select Gender,count(basic_pay) as EmpCount,min(basic_pay) as MinSalary,max(basic_pay) 
+                                   as MaxSalary,sum(basic_pay) as SalarySum,avg(basic_pay) as AvgSalary from dbo.employee_payroll
+                                   where Gender=@parameter group by Gender";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@parameter", gender);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int empCount = reader.GetInt32(1);
+                            double minSalary = reader.GetDouble(2);
+                            double maxSalary = reader.GetDouble(3);
+                            double sumOfSalary = reader.GetDouble(4);
+                            double avgSalary = reader.GetDouble(5);
+                            Console.WriteLine($"Gender:{gender}\nEmployee Count:{empCount}\nMinimum Salary:{minSalary}\nMaximum Salary:{maxSalary}\n" +
+                                $"Total Salary for {gender} :{sumOfSalary}\n" + $"Average Salary:{avgSalary}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Data found");
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
