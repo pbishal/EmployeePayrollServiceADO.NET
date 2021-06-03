@@ -253,5 +253,128 @@ namespace EmployeePayrollService
                 connection.Close();
             }
         }
+
+        /// UC7 Inserts data into multiple tables using transactions.
+        /// </summary>
+        public void InsertIntoMultipleTablesWithTransactions()
+        {
+            DatabaseConnection dbc = new DatabaseConnection();
+            connection = dbc.GetConnection();
+
+            Console.WriteLine("Enter EmployeeID");
+            int empID = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter Name:");
+            string empName = Console.ReadLine();
+
+            DateTime startDate = DateTime.Now;
+
+            Console.WriteLine("Enter Address:");
+            string address = Console.ReadLine();
+
+            Console.WriteLine("Enter Gender:");
+            string gender = Console.ReadLine();
+
+            Console.WriteLine("Enter PhoneNumber:");
+            double phonenumber = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Enter BasicPay:");
+            int basicPay = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter Deductions:");
+            int deductions = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter TaxablePay:");
+            int taxablePay = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter Tax:");
+            int tax = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter NetPay:");
+            int netPay = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter CompanyId:");
+            int companyId = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter CompanyName:");
+            string companyName = Console.ReadLine();
+
+            Console.WriteLine("Enter DeptId:");
+            int deptId = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter DeptName:");
+            string deptName = Console.ReadLine();
+
+            using (connection)
+            {
+                connection.Open();
+
+                // Start a local transaction.
+                SqlTransaction sqlTran = connection.BeginTransaction();
+
+                // Enlist a command in the current transaction.
+                SqlCommand command = connection.CreateCommand();
+                command.Transaction = sqlTran;
+
+                try
+                {
+                    // Execute 1st command
+                    command.CommandText = "insert into company values(@company_id,@company_name)";
+                    command.Parameters.AddWithValue("@company_id", companyId);
+                    command.Parameters.AddWithValue("@company_name", companyName);
+                    command.ExecuteScalar();
+
+                    // Execute 2nd command
+                    command.CommandText = "insert into employee values(@emp_id,@EmpName,@gender,@phone_number,@address,@startDate,@company_id)";
+                    command.Parameters.AddWithValue("@emp_id", empID);
+                    command.Parameters.AddWithValue("@EmpName", empName);
+                    command.Parameters.AddWithValue("@startDate", startDate);
+                    command.Parameters.AddWithValue("@gender", gender);
+                    command.Parameters.AddWithValue("@phone_number", phonenumber);
+                    command.Parameters.AddWithValue("@address", address);
+                    command.ExecuteScalar();
+
+                    // Execute 3rd command
+                    command.CommandText = "insert into payroll values(@emp_id,@Basic_Pay,@Deductions,@Taxable_pay,@Income_tax,@Net_pay)";
+                    command.Parameters.AddWithValue("@Basic_Pay", basicPay);
+                    command.Parameters.AddWithValue("@Deductions", deductions);
+                    command.Parameters.AddWithValue("@Taxable_pay", taxablePay);
+                    command.Parameters.AddWithValue("@Income_tax", tax);
+                    command.Parameters.AddWithValue("@Net_pay", netPay);
+                    command.ExecuteScalar();
+
+                    // Execute 4th command
+                    command.CommandText = "insert into department values(@dept_id,@dept_name)";
+                    command.Parameters.AddWithValue("@dept_id", deptId);
+                    command.Parameters.AddWithValue("@dept_name", deptName);
+                    command.ExecuteScalar();
+
+                    // Execute 5th command
+                    command.CommandText = "insert into employee_dept values(@emp_id,@dept_id)";
+                    command.ExecuteNonQuery();
+
+                    // Commit the transaction after all commands.
+                    sqlTran.Commit();
+                    Console.WriteLine("All records were added into the database.");
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception if the transaction fails to commit.
+                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        // Attempt to roll back the transaction.
+                        sqlTran.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        // Throws an InvalidOperationException if the connection
+                        // is closed or the transaction has already been rolled
+                        // back on the server.
+                        Console.WriteLine(exRollback.Message);
+                    }
+                }
+            }
+        }
     }
 }
