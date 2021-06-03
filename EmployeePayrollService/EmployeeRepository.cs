@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace EmployeePayrollService
 {
-    class EmployeeRepository
+    public class EmployeeRepository
     {
         ///Specifying the connection string from the sql server connection.
         public static string conectionString = @"Data Source=BISHAL\SQLBISHAL;Initial Catalog=payroll_service;Persist Security Info=True;User ID=sa;Password=9439433808";
